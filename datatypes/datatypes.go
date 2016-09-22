@@ -56,10 +56,10 @@ type LbvserverServiceBindingRes struct {
 
 // systemfile
 type Systemfile struct {
-	Filename	string `json:"filename"`
-	Filelocation	string `json:"filelocation"`
-	Filecontent     string `json:"filecontent"`
-	Fileencoding	string `json:"fileencoding"`
+	Filename     string `json:"filename"`
+	Filelocation string `json:"filelocation"`
+	Filecontent  string `json:"filecontent"`
+	Fileencoding string `json:"fileencoding"`
 }
 
 type SystemfileReq struct {
@@ -72,7 +72,7 @@ type SystemfileRes struct {
 
 // nsfeature
 type Nsfeature struct {
-	Feature	[]string `json:"feature"`
+	Feature []string `json:"feature"`
 }
 
 type NsfeatureReq struct {
