@@ -20,6 +20,7 @@ type ServiceReq struct {
 }
 
 type ServiceRes struct {
+	BaseRes
 	Service []Service `json:"service,omitempty"`
 }
 
@@ -37,6 +38,7 @@ type LbvserverReq struct {
 }
 
 type LbvserverRes struct {
+	BaseRes
 	Lbvserver []Lbvserver `json:"lbvserver,omitempty"`
 }
 
@@ -51,6 +53,7 @@ type LbvserverServiceBindingReq struct {
 }
 
 type LbvserverServiceBindingRes struct {
+	BaseRes
 	LbvserverServiceBinding []LbvserverServiceBinding `json:"lbvserver_service_binding,omitempty"`
 }
 
@@ -67,6 +70,7 @@ type SystemfileReq struct {
 }
 
 type SystemfileRes struct {
+	BaseRes
 	Systemfile []Systemfile `json:"systemfile,omitempty"`
 }
 
@@ -80,5 +84,37 @@ type NsfeatureReq struct {
 }
 
 type NsfeatureRes struct {
+	BaseRes
 	Nsfeature []Nsfeature `json:"nsfeature,omitempty"`
+}
+
+// sslcertkey
+type Sslcertkey struct {
+	Certkey string `json:"certkey"`
+	Cert    string `json:"cert"`
+	Key     string `json:"key"`
+}
+
+type SslcertkeyReq struct {
+	Sslcertkey Sslcertkey `json:"sslcertkey,omitempty"`
+}
+
+type SslcertkeyRes struct {
+	BaseRes
+	Sslcertkey []Sslcertkey `json:"sslcertkey,omitempty"`
+}
+
+// sslvserver_sslcertkey_binding
+type SslvserverSslcertkeyBinding struct {
+	Vservername string `json:"vservername"`
+	Certkeyname    string `json:"certkeyname"`
+}
+
+type SslvserverSslcertkeyBindingReq struct {
+	SslvserverSslcertkeyBinding SslvserverSslcertkeyBinding `json:"sslvserver_sslcertkey_binding,omitempty"`
+}
+
+type SslvserverSslcertkeyBindingRes struct {
+	BaseRes
+	SslvserverSslcertkeyBinding []SslvserverSslcertkeyBinding `json:"sslvserver_sslcertkey_binding,omitempty"`
 }

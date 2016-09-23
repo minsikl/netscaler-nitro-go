@@ -17,6 +17,8 @@ var resourceMap = map[string]string{
 	"LbvserverServiceBinding": "lbvserver_service_binding",
 	"Systemfile":              "systemfile",
 	"Nsfeature":               "nsfeature",
+	"Sslcertkey":              "sslcertkey",
+	"SslvserverSslcertkeyBinding": "sslvserver_sslcertkey_binding",
 }
 
 // Nitro Client
