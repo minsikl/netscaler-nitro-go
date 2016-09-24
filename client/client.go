@@ -47,12 +47,12 @@ func (n *NitroClient) Add(req interface{}) error {
 	}
 	if len(responseBody) > 0 {
 		res := datatypes.BaseRes{}
-		err = json.Unmarshal(responseBody, res)
+		err = json.Unmarshal(responseBody, &res)
 		if err != nil {
 			return fmt.Errorf("Error in Unmarshal %s", err.Error())
 		}
-		if res.Severity == "ERROR" {
-			return fmt.Errorf("Error in POST : %+v", res)
+		if *res.Severity == "ERROR" {
+			return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *res.Errorcode, *res.Message, *res.Severity)
 		}
 	}
 	return nil
@@ -90,8 +90,8 @@ func (n *NitroClient) Get(res interface{}, resourceName string, filter string, a
 	if err != nil {
 		return fmt.Errorf("Error in Unmarshal %s", err.Error())
 	}
-	if resMessage.Severity == "ERROR" {
-		return fmt.Errorf("Error in POST : %+v", resMessage)
+	if *resMessage.Severity == "ERROR" {
+		return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *resMessage.Errorcode, *resMessage.Message, *resMessage.Severity)
 	}
 
 	return nil
@@ -114,8 +114,8 @@ func (n *NitroClient) Delete(req interface{}, resourceName string, args string) 
 	}
 	resMessage := datatypes.BaseRes{}
 	err = json.Unmarshal(responseBody, &resMessage)
-	if resMessage.Severity == "ERROR" {
-		return fmt.Errorf("Error in DELETE : %+v", resMessage)
+	if *resMessage.Severity == "ERROR" {
+		return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *resMessage.Errorcode, *resMessage.Message, *resMessage.Severity)
 	}
 
 	return nil
@@ -137,13 +137,12 @@ func (n *NitroClient) Enable(req interface{}) error {
 	}
 	if len(responseBody) > 0 {
 		res := datatypes.BaseRes{}
-		err = json.Unmarshal(responseBody, res)
+		err = json.Unmarshal(responseBody, &res)
 		if err != nil {
 			return fmt.Errorf("Error in Unmarshal %s", err.Error())
 		}
-
-		if res.Severity == "ERROR" {
-			return fmt.Errorf("Error in POST for Enable: %+v", res)
+		if *res.Severity == "ERROR" {
+			return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *res.Errorcode, *res.Message, *res.Severity)
 		}
 	}
 	return nil
@@ -165,13 +164,12 @@ func (n *NitroClient) Disable(req interface{}) error {
 	}
 	if len(responseBody) > 0 {
 		res := datatypes.BaseRes{}
-		err = json.Unmarshal(responseBody, res)
+		err = json.Unmarshal(responseBody, &res)
 		if err != nil {
 			return fmt.Errorf("Error in Unmarshal %s", err.Error())
 		}
-
-		if res.Severity == "ERROR" {
-			return fmt.Errorf("Error in POST for Disable: %+v", res)
+		if *res.Severity == "ERROR" {
+			return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *res.Errorcode, *res.Message, *res.Severity)
 		}
 	}
 	return nil

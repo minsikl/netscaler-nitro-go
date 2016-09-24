@@ -2,21 +2,21 @@ package datatypes
 
 // Base
 type BaseRes struct {
-	Errorcode int    `json:"errorcode"`
-	Message   string `json:"message"`
-	Severity  string `json:"severity"`
+	Errorcode *int    `json:"errorcode,omitempty"`
+	Message   *string `json:"message,omitempty"`
+	Severity  *string `json:"severity,omitempty"`
 }
 
 // service
 type Service struct {
-	Name        string `json:"name"`
-	Ip          string `json:"ip"`
-	ServiceType string `json:"servicetype"`
-	Port        int    `json:"port"`
+	Name        *string `json:"name,omitempty"`
+	Ip          *string `json:"ip,omitempty"`
+	ServiceType *string `json:"servicetype,omitempty"`
+	Port        *int    `json:"port,omitempty"`
 }
 
 type ServiceReq struct {
-	Service Service `json:"service,omitempty"`
+	Service *Service `json:"service,omitempty"`
 }
 
 type ServiceRes struct {
@@ -26,15 +26,15 @@ type ServiceRes struct {
 
 // lbvserver
 type Lbvserver struct {
-	Name        string `json:"name"`
-	ServiceType string `json:"servicetype"`
-	Port        int    `json:"port"`
-	Lbmethod    string `json:"lbmethod"`
-	Ipv46       string `json:"ipv46"`
+	Name        *string `json:"name,omitempty"`
+	ServiceType *string `json:"servicetype,omitempty"`
+	Port        *int    `json:"port,omitempty"`
+	Lbmethod    *string `json:"lbmethod,omitempty"`
+	Ipv46       *string `json:"ipv46,omitempty"`
 }
 
 type LbvserverReq struct {
-	Lbvserver Lbvserver `json:"lbvserver,omitempty"`
+	Lbvserver *Lbvserver `json:"lbvserver,omitempty"`
 }
 
 type LbvserverRes struct {
@@ -44,12 +44,12 @@ type LbvserverRes struct {
 
 //lbvserver_service_binding
 type LbvserverServiceBinding struct {
-	Name        string `json:"name"`
-	ServiceName string `json:"serviceName"`
+	Name        *string `json:"name,omitempty"`
+	ServiceName *string `json:"serviceName,omitempty"`
 }
 
 type LbvserverServiceBindingReq struct {
-	LbvserverServiceBinding LbvserverServiceBinding `json:"lbvserver_service_binding,omitempty"`
+	LbvserverServiceBinding *LbvserverServiceBinding `json:"lbvserver_service_binding,omitempty"`
 }
 
 type LbvserverServiceBindingRes struct {
@@ -59,14 +59,14 @@ type LbvserverServiceBindingRes struct {
 
 // systemfile
 type Systemfile struct {
-	Filename     string `json:"filename"`
-	Filelocation string `json:"filelocation"`
-	Filecontent  string `json:"filecontent"`
-	Fileencoding string `json:"fileencoding"`
+	Filename     *string `json:"filename,omitempty"`
+	Filelocation *string `json:"filelocation,omitempty"`
+	Filecontent  *string `json:"filecontent,omitempty"`
+	Fileencoding *string `json:"fileencoding,omitempty"`
 }
 
 type SystemfileReq struct {
-	Systemfile Systemfile `json:"systemfile,omitempty"`
+	Systemfile *Systemfile `json:"systemfile,omitempty"`
 }
 
 type SystemfileRes struct {
@@ -80,7 +80,7 @@ type Nsfeature struct {
 }
 
 type NsfeatureReq struct {
-	Nsfeature Nsfeature `json:"nsfeature,omitempty"`
+	Nsfeature *Nsfeature `json:"nsfeature,omitempty"`
 }
 
 type NsfeatureRes struct {
@@ -90,13 +90,13 @@ type NsfeatureRes struct {
 
 // sslcertkey
 type Sslcertkey struct {
-	Certkey string `json:"certkey"`
-	Cert    string `json:"cert"`
-	Key     string `json:"key"`
+	Certkey *string `json:"certkey,omitempty"`
+	Cert    *string `json:"cert,omitempty"`
+	Key     *string `json:"key,omitempty"`
 }
 
 type SslcertkeyReq struct {
-	Sslcertkey Sslcertkey `json:"sslcertkey,omitempty"`
+	Sslcertkey *Sslcertkey `json:"sslcertkey,omitempty"`
 }
 
 type SslcertkeyRes struct {
@@ -106,12 +106,12 @@ type SslcertkeyRes struct {
 
 // sslvserver_sslcertkey_binding
 type SslvserverSslcertkeyBinding struct {
-	Vservername string `json:"vservername"`
-	Certkeyname    string `json:"certkeyname"`
+	Vservername *string `json:"vservername,omitempty"`
+	Certkeyname    *string `json:"certkeyname,omitempty"`
 }
 
 type SslvserverSslcertkeyBindingReq struct {
-	SslvserverSslcertkeyBinding SslvserverSslcertkeyBinding `json:"sslvserver_sslcertkey_binding,omitempty"`
+	SslvserverSslcertkeyBinding *SslvserverSslcertkeyBinding `json:"sslvserver_sslcertkey_binding,omitempty"`
 }
 
 type SslvserverSslcertkeyBindingRes struct {
