@@ -9,17 +9,8 @@ import (
 	"log"
 	"net/http"
 	"reflect"
+	"strings"
 )
-
-var resourceMap = map[string]string{
-	"Service":                 "service",
-	"Lbvserver":               "lbvserver",
-	"LbvserverServiceBinding": "lbvserver_service_binding",
-	"Systemfile":              "systemfile",
-	"Nsfeature":               "nsfeature",
-	"Sslcertkey":              "sslcertkey",
-	"SslvserverSslcertkeyBinding": "sslvserver_sslcertkey_binding",
-}
 
 // Nitro Client
 type NitroClient struct {
@@ -37,19 +28,18 @@ func (n *NitroClient) Add(req interface{}) error {
 		return err
 	}
 	reqJson, err := json.Marshal(req)
-
 	if err != nil {
 		return err
 	}
 	responseBody, _, err := HTTPRequest(n, resource, "POST", reqJson)
 	if err != nil {
-		return fmt.Errorf("Error in POST %s", err.Error())
+		return fmt.Errorf("Error in POST 's'", err.Error())
 	}
 	if len(responseBody) > 0 {
 		res := datatypes.BaseRes{}
 		err = json.Unmarshal(responseBody, &res)
 		if err != nil {
-			return fmt.Errorf("Error in Unmarshal %s", err.Error())
+			return fmt.Errorf("Error in Unmarshal '%s'", err.Error())
 		}
 		if *res.Severity == "ERROR" {
 			return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *res.Errorcode, *res.Message, *res.Severity)
@@ -63,7 +53,6 @@ func (n *NitroClient) Get(res interface{}, resourceName string, filter string, a
 	if err != nil {
 		return err
 	}
-
 	resourceQuery := resource
 	if resourceName != "" {
 		resourceQuery = resourceQuery + "/" + resourceName
@@ -83,12 +72,12 @@ func (n *NitroClient) Get(res interface{}, resourceName string, filter string, a
 
 	err = json.Unmarshal(responseBody, res)
 	if err != nil {
-		return fmt.Errorf("Error in Unmarshal %s", err.Error())
+		return fmt.Errorf("Error in Unmarshal '%s'", err.Error())
 	}
 	resMessage := datatypes.BaseRes{}
 	err = json.Unmarshal(responseBody, &resMessage)
 	if err != nil {
-		return fmt.Errorf("Error in Unmarshal %s", err.Error())
+		return fmt.Errorf("Error in Unmarshal '%s'", err.Error())
 	}
 	if *resMessage.Severity == "ERROR" {
 		return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *resMessage.Errorcode, *resMessage.Message, *resMessage.Severity)
@@ -102,7 +91,6 @@ func (n *NitroClient) Delete(req interface{}, resourceName string, args string) 
 	if err != nil {
 		return err
 	}
-
 	resourceQuery := resource + "/" + resourceName
 	if len(args) > 0 {
 		resourceQuery = resourceQuery + "?args=" + args
@@ -121,52 +109,31 @@ func (n *NitroClient) Delete(req interface{}, resourceName string, args string) 
 	return nil
 }
 
-func (n *NitroClient) Enable(req interface{}) error {
+func (n *NitroClient) Enable(req interface{}, enable bool) error {
 	resource, err := getResourceStringByObject(req)
 	if err != nil {
 		return err
 	}
-
 	reqJson, err := json.Marshal(req)
+	log.Printf(string(reqJson))
 	if err != nil {
 		return err
 	}
-	responseBody, _, err := HTTPRequest(n, resource+"/?action=enable", "POST", reqJson)
+	action := "/?action=enable"
+	if enable == false {
+		action = "/?action=disable"
+	}
+	query := resource+action
+	log.Println("QUERY : " + query)
+	responseBody, _, err := HTTPRequest(n, query, "POST", reqJson)
 	if err != nil {
-		return fmt.Errorf("Error in POST %s for Enable", err.Error())
+		return fmt.Errorf("Error in POST '%s' for Enable", err.Error())
 	}
 	if len(responseBody) > 0 {
 		res := datatypes.BaseRes{}
 		err = json.Unmarshal(responseBody, &res)
 		if err != nil {
-			return fmt.Errorf("Error in Unmarshal %s", err.Error())
-		}
-		if *res.Severity == "ERROR" {
-			return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *res.Errorcode, *res.Message, *res.Severity)
-		}
-	}
-	return nil
-}
-
-func (n *NitroClient) Disable(req interface{}) error {
-	resource, err := getResourceStringByObject(req)
-	if err != nil {
-		return err
-	}
-
-	reqJson, err := json.Marshal(req)
-	if err != nil {
-		return err
-	}
-	responseBody, _, err := HTTPRequest(n, resource+"/?action=disable", "POST", reqJson)
-	if err != nil {
-		return fmt.Errorf("Error in POST %s for Disable", err.Error())
-	}
-	if len(responseBody) > 0 {
-		res := datatypes.BaseRes{}
-		err = json.Unmarshal(responseBody, &res)
-		if err != nil {
-			return fmt.Errorf("Error in Unmarshal %s", err.Error())
+			return fmt.Errorf("Error in Unmarshal '%s'", err.Error())
 		}
 		if *res.Severity == "ERROR" {
 			return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *res.Errorcode, *res.Message, *res.Severity)
@@ -228,10 +195,19 @@ func HTTPRequest(nClient *NitroClient, resourceQuery string, requestType string,
 
 func getResourceStringByObject(obj interface{}) (string, error) {
 	resourceType := reflect.TypeOf(obj).Elem().Name()
-	resource := resourceMap[resourceType[:len(resourceType)-3]]
-
-	if len(resource) == 0 {
-		return "", fmt.Errorf("Cannot find a resource name for struct '%s' \r\n", resourceType)
+	if len(resourceType) < 4 || (!strings.Contains(resourceType, "Req") && !strings.Contains(resourceType, "Res")) {
+		return "", fmt.Errorf("Unable to get resource name from '%s'", resourceType)
 	}
-	return resource, nil
+	resourceName := resourceType[:len(resourceType)-3]
+	resourceBytes := make([]byte, 0)
+	for index, character := range []byte(resourceName) {
+		if index > 0 && character < 97 {
+			resourceBytes = append(resourceBytes, []byte("_"+string(character+32))...)
+		} else if character < 97 {
+			resourceBytes = append(resourceBytes, character + 32)
+		} else {
+			resourceBytes = append(resourceBytes, character)
+		}
+	}
+	return string(resourceBytes), nil
 }
