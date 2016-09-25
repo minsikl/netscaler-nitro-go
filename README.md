@@ -5,8 +5,8 @@ Lightweight go library for netscaler nitro API.
 examples:
 ```go
 	// Create a nitro client
-	nClient := client.GetNitroClient("http", [IP ADDRESS], "config",
-		[ID], [PASSWORD], true)
+	nClient := client.GetNitroClient("http", "[IP ADDRESS]", "config",
+		"[ID]", "[PASSWORD]", true)
 		
 	// Enable SSL
     nsfeatureReq := datatypes.NsfeatureReq{
@@ -22,8 +22,8 @@ examples:
 	// Create a virtual server
 	lbvserverReq := datatypes.LbvserverReq{
 		Lbvserver: &datatypes.Lbvserver{
-			Name:        op.String([VIP Name]),
-			Ipv46:       op.String([VIP IP]),
+			Name:        op.String("[VIP Name]"),
+			Ipv46:       op.String("[VIP IP]"),
 			Port:        op.Int(80),
 			ServiceType: op.String("HTTP"),
 			Lbmethod:    op.String("ROUNDROBIN"),
