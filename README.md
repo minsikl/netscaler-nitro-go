@@ -34,4 +34,32 @@ examples:
 	if err != nil {
 		fmt.Printf("[ERROR]" + err.Error())
 	}
+	
+	// Create a service
+	svcReq := datatypes.ServiceReq{
+		Service: &datatypes.Service{
+			Name:        op.String("[Service Name]"),
+			Ip:          op.String("[Service IP]"),
+			Port:        op.Int(80),
+			ServiceType: op.String("HTTP"),
+		},
+	}
+
+	err = nClient.Add(&svcReq)
+	if err != nil {
+		fmt.Printf("[ERROR]" + err.Error())
+	}
+
+	// Bind the service to the virtual server
+	lbvserverServiceBindingReq := datatypes.LbvserverServiceBindingReq{
+		LbvserverServiceBinding: &datatypes.LbvserverServiceBinding{
+			Name:        op.String("[VIP Name]"),
+			ServiceName: op.String("[VIP IP]"),
+		},
+	}
+
+	err = nClient.Add(&lbvserverServiceBindingReq)
+	if err != nil {
+		fmt.Printf("[ERROR]" + err.Error())
+	}
 ```
