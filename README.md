@@ -2,6 +2,8 @@
 
 Lightweight go library for netscaler nitro API.
 
+Support version : 10.5, 11.X
+
 examples:
 ```go
 	// Create a nitro client
