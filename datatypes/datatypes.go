@@ -1,5 +1,11 @@
 package datatypes
 
+const (
+	CONFIG = "config"
+	STAT = "stat"
+
+)
+
 // Base
 type BaseRes struct {
 	Errorcode *int    `json:"errorcode,omitempty"`
@@ -117,4 +123,63 @@ type SslvserverSslcertkeyBindingReq struct {
 type SslvserverSslcertkeyBindingRes struct {
 	BaseRes
 	SslvserverSslcertkeyBinding []SslvserverSslcertkeyBinding `json:"sslvserver_sslcertkey_binding,omitempty"`
+}
+
+// systemuser
+type Systemuser struct {
+	Username *string `json:"username,omitempty"`
+	Password    *string `json:"password,omitempty"`
+}
+
+type SystemuserReq struct {
+	Systemuser *Systemuser `json:"systemuser,omitempty"`
+}
+
+type SystemuserRes struct {
+	BaseRes
+	Systemuser []Systemuser `json:"systemuser,omitempty"`
+}
+
+// hanode
+type Hanode struct {
+	Id *int `json:"id,omitempty"`
+	Ipaddress    *string `json:"ipaddress,omitempty"`
+}
+
+type HanodeReq struct {
+	Hanode *Hanode `json:"hanode,omitempty"`
+}
+
+type HanodeRes struct {
+	BaseRes
+	Hanode []Hanode `json:"hanode,omitempty"`
+}
+
+// nsrpcnode
+type Nsrpcnode struct {
+	Ipaddress *string `json:"ipaddress,omitempty"`
+	Password    *string `json:"password,omitempty"`
+}
+
+type NsrpcnodeReq struct {
+	Nsrpcnode *Nsrpcnode `json:"nsrpcnode,omitempty"`
+}
+
+type NsrpcnodeRes struct {
+	BaseRes
+	Nsrpcnode []Nsrpcnode `json:"nsrpcnode,omitempty"`
+}
+
+// hafiles
+type Hafiles struct {
+	Mode []string `json:"mode,omitempty"`
+}
+
+type HafilesReq struct {
+	Hafiles *Hafiles `json:"hafiles,omitempty"`
+}
+
+type HafilesRes struct {
+	BaseRes
+	Hafiles []Hafiles `json:"hafiles,omitempty"`
 }
