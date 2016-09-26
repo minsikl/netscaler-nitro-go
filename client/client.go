@@ -22,7 +22,7 @@ type NitroClient struct {
 	Debug     bool
 }
 
-func (n *NitroClient) Add(req interface{}) error {
+func (n *NitroClient) Add(req interface{}, options ...string) error {
 	resource, err := getResourceStringByObject(req)
 	if err != nil {
 		return err
@@ -31,7 +31,8 @@ func (n *NitroClient) Add(req interface{}) error {
 	if err != nil {
 		return err
 	}
-	responseBody, _, err := HTTPRequest(n, resource, "POST", reqJson)
+	requestQuery := resource + getOptions(options)
+	responseBody, _, err := HTTPRequest(n, requestQuery, "POST", reqJson)
 	if err != nil {
 		return fmt.Errorf("Error in POST 's'", err.Error())
 	}
@@ -48,24 +49,41 @@ func (n *NitroClient) Add(req interface{}) error {
 	return nil
 }
 
-func (n *NitroClient) Get(res interface{}, resourceName string, filter string, attrs string) error {
+func (n *NitroClient) Update(req interface{}, options ...string) error {
+	resource, err := getResourceStringByObject(req)
+	if err != nil {
+		return err
+	}
+	reqJson, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	requestQuery := resource + getOptions(options)
+	responseBody, _, err := HTTPRequest(n, requestQuery, "PUT", reqJson)
+	if err != nil {
+		return fmt.Errorf("Error in PUT 's'", err.Error())
+	}
+	if len(responseBody) > 0 {
+		res := datatypes.BaseRes{}
+		err = json.Unmarshal(responseBody, &res)
+		if err != nil {
+			return fmt.Errorf("Error in Unmarshal '%s'", err.Error())
+		}
+		if *res.Severity == "ERROR" {
+			return fmt.Errorf("Error in POST : Errorcode '%d' Message '%s' Severity '%s'\r\n", *res.Errorcode, *res.Message, *res.Severity)
+		}
+	}
+	return nil
+}
+
+func (n *NitroClient) Get(res interface{}, resourceName string, options ...string) error {
 	resource, err := getResourceStringByObject(res)
 	if err != nil {
 		return err
 	}
-	resourceQuery := resource
-	if resourceName != "" {
-		resourceQuery = resourceQuery + "/" + resourceName
-		if attrs != "" {
-			resourceQuery = resourceQuery + "?attrs=" + attrs
-		}
-	} else {
-		if filter != "" {
-			resourceQuery = resourceQuery + "?filter=" + filter
-		}
-	}
 
-	responseBody, _, err := HTTPRequest(n, resourceQuery, "GET", nil)
+	requestQuery := resource + "/" + resourceName + getOptions(options)
+	responseBody, _, err := HTTPRequest(n, requestQuery, "GET", nil)
 	if err != nil {
 		return err
 	}
@@ -86,17 +104,14 @@ func (n *NitroClient) Get(res interface{}, resourceName string, filter string, a
 	return nil
 }
 
-func (n *NitroClient) Delete(req interface{}, resourceName string, args string) error {
+func (n *NitroClient) Delete(req interface{}, resourceName string, options ...string) error {
 	resource, err := getResourceStringByObject(req)
 	if err != nil {
 		return err
 	}
-	resourceQuery := resource + "/" + resourceName
-	if len(args) > 0 {
-		resourceQuery = resourceQuery + "?args=" + args
-	}
 
-	responseBody, _, err := HTTPRequest(n, resourceQuery, "DELETE", nil)
+	requestQuery := resource + "/" + resourceName + getOptions(options)
+	responseBody, _, err := HTTPRequest(n, requestQuery, "DELETE", nil)
 	if err != nil {
 		return err
 	}
@@ -154,10 +169,10 @@ func GetNitroClient(protocol string, ipAddress string, mode string, user string,
 	return &nClient
 }
 
-func HTTPRequest(nClient *NitroClient, resourceQuery string, requestType string, requestBody []byte) ([]byte, int, error) {
+func HTTPRequest(nClient *NitroClient, requestQuery string, requestType string, requestBody []byte) ([]byte, int, error) {
 
 	// Create a request
-	Url := nClient.Protocol + "://" + nClient.IpAddress + "/nitro/v1/" + nClient.Mode + "/" + resourceQuery
+	Url := nClient.Protocol + "://" + nClient.IpAddress + "/nitro/v1/" + nClient.Mode + "/" + requestQuery
 	requestBodyBuffer := bytes.NewBuffer(requestBody)
 	req, err := http.NewRequest(requestType, Url, requestBodyBuffer)
 	if err != nil {
@@ -210,4 +225,18 @@ func getResourceStringByObject(obj interface{}) (string, error) {
 		}
 	}
 	return string(resourceBytes), nil
+}
+
+func getOptions(options []string) string {
+	res := ""
+	if len(options) > 0 {
+		for index, option := range options {
+			if index == 0 {
+				res = "?" + option
+			} else {
+				res = res + "&" + option
+			}
+		}
+	}
+	return res
 }
