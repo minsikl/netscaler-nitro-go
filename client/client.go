@@ -157,7 +157,7 @@ func (n *NitroClient) Enable(req interface{}, enable bool) error {
 	return nil
 }
 
-func GetNitroClient(protocol string, ipAddress string, mode string, user string, password string, debug bool) *NitroClient {
+func NewNitroClient(protocol string, ipAddress string, mode string, user string, password string, debug bool) *NitroClient {
 	nClient := NitroClient{
 		Protocol:  protocol,
 		IpAddress: ipAddress,

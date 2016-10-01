@@ -144,6 +144,7 @@ type SystemuserRes struct {
 type Hanode struct {
 	Id *int `json:"id,omitempty"`
 	Ipaddress    *string `json:"ipaddress,omitempty"`
+	Hastatus    *string `json:"hastatus,omitempty"`
 }
 
 type HanodeReq struct {
