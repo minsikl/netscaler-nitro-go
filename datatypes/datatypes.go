@@ -37,6 +37,7 @@ type Lbvserver struct {
 	Port        *int    `json:"port,omitempty"`
 	Lbmethod    *string `json:"lbmethod,omitempty"`
 	Ipv46       *string `json:"ipv46,omitempty"`
+	Persistencetype       *string `json:"persistencetype,omitempty"`
 }
 
 type LbvserverReq struct {
