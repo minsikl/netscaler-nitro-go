@@ -17,8 +17,11 @@ type BaseRes struct {
 type Service struct {
 	Name        *string `json:"name,omitempty"`
 	Ip          *string `json:"ip,omitempty"`
+	Ipaddress   *string `json:"ipaddress,omitempty"`
 	ServiceType *string `json:"servicetype,omitempty"`
 	Port        *int    `json:"port,omitempty"`
+	Weight      *int    `json:"weight,omitempty"`
+	Maxclient   *string `json:"maxclient,omitempty"`
 }
 
 type ServiceReq struct {
