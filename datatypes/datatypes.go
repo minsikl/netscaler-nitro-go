@@ -188,3 +188,18 @@ type HafilesRes struct {
 	BaseRes
 	Hafiles []Hafiles `json:"hafiles,omitempty"`
 }
+
+//service_lbmonitor_binding
+type ServiceLbmonitorBinding struct {
+	Name        *string `json:"name,omitempty"`
+	MonitorName *string `json:"monitor_name,omitempty"`
+}
+
+type ServiceLbmonitorBindingReq struct {
+	ServiceLbmonitorBinding *ServiceLbmonitorBinding `json:"service_lbmonitor_binding,omitempty"`
+}
+
+type ServiceLbmonitorBindingRes struct {
+	BaseRes
+	ServiceLbmonitorBinding []ServiceLbmonitorBinding `json:"service_lbmonitor_binding,omitempty"`
+}
